@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Modal, Button as BootstrapButton } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Layout, Menu, Button as AntButton } from 'antd';
-import { MenuUnfoldOutlined, MenuFoldOutlined, PieChartOutlined, LogoutOutlined } from '@ant-design/icons';
+import { MenuUnfoldOutlined, MenuFoldOutlined, PieChartOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Container, Header, Title, Form, Input, Button, Table, TableRow, TableHeader, TableCell, TableBody } from './Dashboard.styles';
 import './Sidebar.css'; // Asegúrate de tener este archivo para los estilos personalizados
 
@@ -86,6 +86,10 @@ const Dashboard: React.FC = () => {
     navigate('/stats'); // Asegúrate de tener una ruta configurada para estadísticas del usuario
   };
 
+  const handleViewProfile = () => {
+    navigate('/profile'); // Asegúrate de tener una ruta configurada para el perfil del usuario
+  };
+
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
@@ -98,7 +102,10 @@ const Dashboard: React.FC = () => {
           <Menu.Item key="1" icon={<PieChartOutlined />} onClick={handleViewStats}>
             Estadísticas
           </Menu.Item>
-          <Menu.Item key="2" icon={<LogoutOutlined />} onClick={handleLogout}>
+          <Menu.Item key="2" icon={<UserOutlined />} onClick={handleViewProfile}>
+            Perfil
+          </Menu.Item>
+          <Menu.Item key="3" icon={<LogoutOutlined />} onClick={handleLogout}>
             Cerrar Sesión
           </Menu.Item>
         </Menu>

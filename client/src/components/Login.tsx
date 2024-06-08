@@ -15,7 +15,7 @@ const Login: React.FC = () => {
     e.preventDefault();
 
     try {
-      const apiUrl = process.env.REACT_APP_API_ONLINE;
+      const apiUrl = process.env.REACT_APP_API_BASE_URL;
       // if (!apiUrl) {
       //   throw new Error("API base URL is not defined");
       // }

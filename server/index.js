@@ -19,6 +19,11 @@ app.use('/api/transactions', transactionRoutes);
 const statsRoutes = require('./routes/stats');
 app.use('/api/stats', statsRoutes);
 
+// Rutas de usuarios
+const userRoutes = require('./routes/user');
+app.use('/api/user', userRoutes);
+
+
 // Ruta por defecto
 app.use("/", (req, res) => {
   res.send("Server is running.");
