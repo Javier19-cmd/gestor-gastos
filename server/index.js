@@ -11,9 +11,13 @@ app.use(express.json());
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
 
+// Rutas de transacciones
+const transactionRoutes = require('./routes/transactions');
+app.use('/api/transactions', transactionRoutes);
+
 // Ruta por defecto
 app.use("/", (req, res) => {
-    res.send("Server is running.");
+  res.send("Server is running.");
 });
 
 mongoose.connect(process.env.MONGO_URI, {

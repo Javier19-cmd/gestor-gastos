@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
 import Login from './components/Login';
 import Register from './components/Register';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Dashboard from './components/Dashboard';
 
 const App: React.FC = () => {
   return (
@@ -13,6 +13,7 @@ const App: React.FC = () => {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </div>
     </Router>
