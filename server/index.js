@@ -4,7 +4,13 @@ const cors = require('cors');
 require('dotenv').config();
 const app = express();
 
-app.use(cors());
+// Configurar CORS
+const corsOptions = {
+  origin: ['http://localhost:3000', 'https://tu-frontend.com'],
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Rutas de autenticación
