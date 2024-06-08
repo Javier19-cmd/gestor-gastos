@@ -4,12 +4,6 @@ const cors = require('cors');
 require('dotenv').config();
 const app = express();
 
-// // Configurar CORS
-// const corsOptions = {
-//   origin: ['http://localhost:3000', 'https://tu-frontend.com'],
-//   optionsSuccessStatus: 200
-// };
-
 app.use(cors());
 app.use(express.json());
 
@@ -20,6 +14,10 @@ app.use('/api/auth', authRoutes);
 // Rutas de transacciones
 const transactionRoutes = require('./routes/transactions');
 app.use('/api/transactions', transactionRoutes);
+
+// Rutas de estadísticas
+const statsRoutes = require('./routes/stats');
+app.use('/api/stats', statsRoutes);
 
 // Ruta por defecto
 app.use("/", (req, res) => {

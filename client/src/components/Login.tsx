@@ -25,7 +25,7 @@ const Login: React.FC = () => {
         password,
       });
 
-      // Guardar el token en el almacenamiento local (localStorage)
+      // Guardando el token en el almacenamiento local (localStorage)
       localStorage.setItem('token', response.data.token);
       setModalMessage('Login successful!');
       setIsModalOpen(true);

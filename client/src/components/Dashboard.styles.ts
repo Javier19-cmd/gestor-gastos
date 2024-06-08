@@ -59,14 +59,14 @@ export const Button = styled.button`
   padding: 10px 20px;
   font-size: 1rem;
   color: #fff;
-  background-color: #28a745;
+  background-color: #4CAF50; /* Color personalizado */
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #218838;
+    background-color: #45a049; /* Color personalizado */
   }
 
   &.delete {
