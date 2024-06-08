@@ -43,7 +43,7 @@ const Login: React.FC = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     if (modalMessage === 'Login successful!') {
-      navigate('/dashboard'); // Redirigir a la página principal después del inicio de sesión exitoso
+      navigate('/dashboard'); // Redirección al dashboard si el login es exitoso
     }
   };
 

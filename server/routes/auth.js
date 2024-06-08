@@ -1,12 +1,26 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const rateLimit = require('express-rate-limit');
 const User = require('../models/User');
 
 const router = express.Router();
 
+// Configurar limitadores de tasa
+const registerLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 5, // Limita a 5 solicitudes por ventana de tiempo por IP
+  message: "Too many accounts created from this IP, please try again after 15 minutes"
+});
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 5, // Limita a 5 solicitudes por ventana de tiempo por IP
+  message: "Too many login attempts from this IP, please try again after 15 minutes"
+});
+
 // Registro
-router.post('/register', async (req, res) => {
+router.post('/register', registerLimiter, async (req, res) => {
   const { email, password, confirmPassword } = req.body;
 
   if (password !== confirmPassword) {
@@ -34,7 +48,7 @@ router.post('/register', async (req, res) => {
 });
 
 // Login
-router.post('/login', async (req, res) => {
+router.post('/login', loginLimiter, async (req, res) => {
   const { email, password } = req.body;
 
   try {
