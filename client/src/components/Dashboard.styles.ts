@@ -8,6 +8,10 @@ export const Container = styled.div`
   padding: 20px;
   background-color: #f0f2f5;
   font-family: 'Arial', sans-serif;
+
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
 `;
 
 export const Header = styled.div`
@@ -20,10 +24,19 @@ export const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 10px;
+  }
 `;
 
 export const Title = styled.h1`
   font-size: 2rem;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
 `;
 
 export const LogoutButton = styled.button`
@@ -39,12 +52,23 @@ export const LogoutButton = styled.button`
   &:hover {
     background-color: #c82333;
   }
+
+  @media (max-width: 768px) {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
 `;
 
 export const Form = styled.form`
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    width: 100%;
+    gap: 5px;
+  }
 `;
 
 export const Input = styled.input`
@@ -53,6 +77,11 @@ export const Input = styled.input`
   border: 1px solid #ccc;
   border-radius: 4px;
   width: 200px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 8px;
+  }
 `;
 
 export const Button = styled.button`
@@ -76,12 +105,21 @@ export const Button = styled.button`
       background-color: #c82333;
     }
   }
+
+  @media (max-width: 768px) {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
 `;
 
 export const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+  }
 `;
 
 export const TableHeader = styled.thead`
@@ -96,6 +134,10 @@ export const TableRow = styled.tr`
 export const TableCell = styled.td`
   padding: 10px;
   text-align: left;
+
+  @media (max-width: 768px) {
+    padding: 8px;
+  }
 `;
 
 export const TableBody = styled.tbody`

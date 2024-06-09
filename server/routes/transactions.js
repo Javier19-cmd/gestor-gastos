@@ -1,29 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const rateLimit = require('express-rate-limit');
 const Transaction = require('../models/Transaction');
 const auth = require('../middleware/auth');
 
-// Configurar limitadores de tasa
-const transactionsLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // Limita a 100 solicitudes por ventana de tiempo por IP
-  message: "Too many requests from this IP, please try again after 15 minutes"
-});
-
 // Obtener todas las transacciones del usuario
-router.get('/', auth, transactionsLimiter, async (req, res) => {
+router.get('/', auth, async (req, res) => {
   try {
     const transactions = await Transaction.find({ userId: req.user.userId });
     res.json(transactions);
   } catch (err) {
-    console.error(err); // Log del error en el servidor
+    console.error('Error fetching transactions:', err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
 
 // Crear una nueva transacción
-router.post('/', auth, transactionsLimiter, async (req, res) => {
+router.post('/', auth, async (req, res) => {
   const { description, amount } = req.body;
 
   try {
@@ -36,13 +28,13 @@ router.post('/', auth, transactionsLimiter, async (req, res) => {
     const savedTransaction = await newTransaction.save();
     res.json(savedTransaction);
   } catch (err) {
-    console.error(err); // Log del error en el servidor
+    console.error('Error adding transaction:', err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
 
 // Eliminar una transacción
-router.delete('/:id', auth, transactionsLimiter, async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
   try {
     const transaction = await Transaction.findById(req.params.id);
 
@@ -57,7 +49,7 @@ router.delete('/:id', auth, transactionsLimiter, async (req, res) => {
     await Transaction.findByIdAndDelete(req.params.id);
     res.json({ message: 'Transaction removed' });
   } catch (err) {
-    console.error(err); // Log del error en el servidor
+    console.error('Error deleting transaction:', err);
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 });
