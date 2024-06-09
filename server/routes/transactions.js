@@ -16,13 +16,14 @@ router.get('/', auth, async (req, res) => {
 
 // Crear una nueva transacción
 router.post('/', auth, async (req, res) => {
-  const { description, amount } = req.body;
+  const { description, amount, type } = req.body;
 
   try {
     const newTransaction = new Transaction({
       userId: req.user.userId,
       description,
       amount,
+      type,
     });
 
     const savedTransaction = await newTransaction.save();
