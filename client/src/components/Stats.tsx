@@ -47,6 +47,10 @@ const Stats: React.FC = () => {
     fetchMonthlyStats();
   }, []);
 
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('es-GT', { style: 'currency', currency: 'GTQ' }).format(amount);
+  };
+
   const barData = {
     labels: Object.keys(monthlyStats).map(month => {
       const [year, monthIndex] = month.split('-').map(Number);

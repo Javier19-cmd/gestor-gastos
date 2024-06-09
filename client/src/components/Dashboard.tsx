@@ -39,19 +39,19 @@ const Dashboard: React.FC = () => {
 
   const addTransaction = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     try {
       const token = localStorage.getItem('token');
-      const endpoint = type === 'income' ? '/api/transactions/income' : '/api/transactions';
-      const response = await axios.post(`${process.env.REACT_APP_API_ONLINE}${endpoint}`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_ONLINE}/api/transactions`, {
         description,
         amount: parseFloat(amount),
+        type,
       }, {
         headers: {
           'x-auth-token': token
         }
       });
-
+  
       setTransactions([...transactions, response.data]);
       setDescription('');
       setAmount('');
@@ -60,6 +60,7 @@ const Dashboard: React.FC = () => {
       console.error('Error adding transaction:', error);
     }
   };
+  
 
   const deleteTransaction = async (id: string) => {
     try {
@@ -95,6 +96,10 @@ const Dashboard: React.FC = () => {
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('es-GT', { style: 'currency', currency: 'GTQ' }).format(amount);
   };
 
   const menuItems = [
@@ -147,7 +152,7 @@ const Dashboard: React.FC = () => {
                 {transactions.map((transaction) => (
                   <TableRow key={transaction._id}>
                     <TableCell>{transaction.description}</TableCell>
-                    <TableCell>{transaction.amount}</TableCell>
+                    <TableCell>{formatCurrency(transaction.amount)}</TableCell>
                     <TableCell>{transaction.type === 'income' ? 'Ingreso' : 'Gasto'}</TableCell>
                     <TableCell>
                       <AntButton onClick={() => deleteTransaction(transaction._id)} type="primary" danger>Eliminar</AntButton>
