@@ -9,7 +9,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 Chart.register(...registerables);
 
 const Stats: React.FC = () => {
-  const [summary, setSummary] = useState({ totalAmount: 0 });
+  const [summary, setSummary] = useState({ totalIncome: 0, totalExpense: 0 });
   const [monthlyStats, setMonthlyStats] = useState<any>({});
   const navigate = useNavigate();
 
@@ -22,8 +22,8 @@ const Stats: React.FC = () => {
             'x-auth-token': token
           }
         });
-        const { totalAmount } = response.data;
-        setSummary({ totalAmount });
+        const { totalIncome, totalExpense } = response.data;
+        setSummary({ totalIncome, totalExpense });
       } catch (error) {
         console.error('Error fetching summary:', error);
       }
@@ -57,19 +57,29 @@ const Stats: React.FC = () => {
     }),
     datasets: [
       {
-        label: 'Monto Total',
-        data: Object.values(monthlyStats).map((stats: any) => stats.total || 0),
+        label: 'Ingresos',
+        data: Object.values(monthlyStats).map((stats: any) => stats.income || 0),
+        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+      },
+      {
+        label: 'Gastos',
+        data: Object.values(monthlyStats).map((stats: any) => Math.abs(stats.expense || 0)),
+        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+      },
+      {
+        label: 'Ahorros',
+        data: Object.values(monthlyStats).map((stats: any) => (stats.income || 0) - Math.abs(stats.expense || 0)),
         backgroundColor: 'rgba(153, 102, 255, 0.6)',
       },
     ],
   };
 
   const pieData = {
-    labels: ['Monto Total'],
+    labels: ['Ingresos', 'Gastos'],
     datasets: [
       {
-        data: [summary.totalAmount || 0],
-        backgroundColor: ['rgba(153, 102, 255, 0.6)'],
+        data: [summary.totalIncome, Math.abs(summary.totalExpense)],
+        backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(255, 99, 132, 0.6)'],
       },
     ],
   };

@@ -2,18 +2,20 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Modal, Button as BootstrapButton } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { Layout, Menu, Button as AntButton } from 'antd';
+import { Layout, Menu, Button as AntButton, Select } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, PieChartOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Container, Header, Title, Form, Input, Button, Table, TableRow, TableHeader, TableCell, TableBody } from './Dashboard.styles';
 import './Sidebar.css';
 
 const { Sider, Content } = Layout;
+const { Option } = Select;
 
 const Dashboard: React.FC = () => {
   const [collapsed, setCollapsed] = useState(true);
-  const [transactions, setTransactions] = useState<{ description: string, amount: number, _id: string }[]>([]);
+  const [transactions, setTransactions] = useState<{ description: string, amount: number, _id: string, type: string }[]>([]);
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
+  const [type, setType] = useState('expense'); // Tipo de transacción
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const navigate = useNavigate();
@@ -44,6 +46,7 @@ const Dashboard: React.FC = () => {
       const response = await axios.post(`${process.env.REACT_APP_API_ONLINE}/api/transactions`, {
         description,
         amount: parseFloat(amount),
+        type, // Incluyendo el tipo de transacción
       }, {
         headers: {
           'x-auth-token': token
@@ -53,6 +56,7 @@ const Dashboard: React.FC = () => {
       setTransactions([...transactions, response.data]);
       setDescription('');
       setAmount('');
+      setType('expense'); // Resetear tipo después de agregar la transacción
     } catch (error) {
       console.error('Error adding transaction:', error);
     }
@@ -127,6 +131,10 @@ const Dashboard: React.FC = () => {
               value={amount} 
               onChange={(e) => setAmount(e.target.value)} 
             />
+            <Select value={type} onChange={(value) => setType(value)}>
+              <Option value="expense">Gasto</Option>
+              <Option value="income">Ingreso</Option>
+            </Select>
             <Button type="submit">Agregar Transacción</Button>
           </Form>
           <Table>
@@ -134,6 +142,7 @@ const Dashboard: React.FC = () => {
               <TableRow>
                 <TableCell>Descripción</TableCell>
                 <TableCell>Monto</TableCell>
+                <TableCell>Tipo</TableCell>
                 <TableCell>Acciones</TableCell>
               </TableRow>
             </TableHeader>
@@ -142,6 +151,7 @@ const Dashboard: React.FC = () => {
                 <TableRow key={transaction._id}>
                   <TableCell>{transaction.description}</TableCell>
                   <TableCell>{transaction.amount}</TableCell>
+                  <TableCell>{transaction.type === 'income' ? 'Ingreso' : 'Gasto'}</TableCell>
                   <TableCell>
                     <AntButton onClick={() => deleteTransaction(transaction._id)} type="primary" danger>Eliminar</AntButton>
                   </TableCell>

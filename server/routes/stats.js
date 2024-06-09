@@ -8,12 +8,11 @@ router.get('/summary', auth, async (req, res) => {
   try {
     const transactions = await Transaction.find({ userId: req.user.userId });
 
-    // Cálculo del total de transacciones y el total de montos para gastos
-    const filteredTransactions = transactions.filter(transaction => transaction.amount < 0);
-    const totalTransactions = filteredTransactions.length;
-    const totalAmount = filteredTransactions.reduce((acc, transaction) => acc + transaction.amount, 0);
+    // Cálculo del total de montos para ingresos y gastos
+    const totalIncome = transactions.filter(transaction => transaction.type === 'income').reduce((acc, transaction) => acc + transaction.amount, 0);
+    const totalExpense = transactions.filter(transaction => transaction.type === 'expense').reduce((acc, transaction) => acc + transaction.amount, 0);
 
-    res.json({ totalTransactions, totalAmount });
+    res.json({ totalIncome, totalExpense });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error', error: err.message });
@@ -25,17 +24,16 @@ router.get('/monthly', auth, async (req, res) => {
   try {
     const transactions = await Transaction.find({ userId: req.user.userId });
 
-    console.log("Transactions: ", transactions)
-
     const monthlyStats = transactions.reduce((acc, transaction) => {
-      if (transaction.amount >= 0) return acc;
-
       const month = `${transaction.date.getFullYear()}-${transaction.date.getMonth() + 1}`;
       if (!acc[month]) {
-        acc[month] = { count: 0, total: 0 };
+        acc[month] = { income: 0, expense: 0 };
       }
-      acc[month].count += 1;
-      acc[month].total += transaction.amount;
+      if (transaction.type === 'income') {
+        acc[month].income += transaction.amount;
+      } else if (transaction.type === 'expense') {
+        acc[month].expense += transaction.amount;
+      }
       return acc;
     }, {});
 
