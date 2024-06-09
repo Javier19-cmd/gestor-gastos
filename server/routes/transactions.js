@@ -22,7 +22,7 @@ router.post('/', auth, async (req, res) => {
     const newTransaction = new Transaction({
       userId: req.user.userId,
       description,
-      amount,
+      amount: parseFloat(amount),
       type,
     });
 
