@@ -9,7 +9,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 Chart.register(...registerables);
 
 const Stats: React.FC = () => {
-  const [summary, setSummary] = useState({ totalTransactions: 0, totalAmount: 0 });
+  const [summary, setSummary] = useState({ totalAmount: 0 });
   const [monthlyStats, setMonthlyStats] = useState<any>({});
   const navigate = useNavigate();
 
@@ -22,7 +22,8 @@ const Stats: React.FC = () => {
             'x-auth-token': token
           }
         });
-        setSummary(response.data);
+        const { totalAmount } = response.data;
+        setSummary({ totalAmount });
       } catch (error) {
         console.error('Error fetching summary:', error);
       }
@@ -56,24 +57,19 @@ const Stats: React.FC = () => {
     }),
     datasets: [
       {
-        label: 'Número de Transacciones',
-        data: Object.values(monthlyStats).map((stats: any) => stats.count),
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-      },
-      {
         label: 'Monto Total',
-        data: Object.values(monthlyStats).map((stats: any) => stats.total),
+        data: Object.values(monthlyStats).map((stats: any) => stats.total || 0),
         backgroundColor: 'rgba(153, 102, 255, 0.6)',
       },
     ],
   };
 
   const pieData = {
-    labels: ['Total de Transacciones', 'Monto Total'],
+    labels: ['Monto Total'],
     datasets: [
       {
-        data: [summary.totalTransactions, summary.totalAmount],
-        backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(153, 102, 255, 0.6)'],
+        data: [summary.totalAmount || 0],
+        backgroundColor: ['rgba(153, 102, 255, 0.6)'],
       },
     ],
   };

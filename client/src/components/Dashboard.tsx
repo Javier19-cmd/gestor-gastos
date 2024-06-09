@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Layout, Menu, Button as AntButton } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, PieChartOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Container, Header, Title, Form, Input, Button, Table, TableRow, TableHeader, TableCell, TableBody } from './Dashboard.styles';
-import './Sidebar.css'; // Asegúrate de tener este archivo para los estilos personalizados
+import './Sidebar.css';
 
 const { Sider, Content } = Layout;
 
@@ -83,32 +83,28 @@ const Dashboard: React.FC = () => {
   };
 
   const handleViewStats = () => {
-    navigate('/stats'); // Asegúrate de tener una ruta configurada para estadísticas del usuario
+    navigate('/stats');
   };
 
   const handleViewProfile = () => {
-    navigate('/profile'); // Asegúrate de tener una ruta configurada para el perfil del usuario
+    navigate('/profile');
   };
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
 
+  const menuItems = [
+    { key: '1', icon: <PieChartOutlined />, label: 'Estadísticas', onClick: handleViewStats },
+    { key: '2', icon: <UserOutlined />, label: 'Perfil', onClick: handleViewProfile },
+    { key: '3', icon: <LogoutOutlined />, label: 'Cerrar Sesión', onClick: handleLogout }
+  ];
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={toggleCollapsed} breakpoint="md">
         <div className="logo" />
-        <Menu theme="dark" mode="inline">
-          <Menu.Item key="1" icon={<PieChartOutlined />} onClick={handleViewStats}>
-            Estadísticas
-          </Menu.Item>
-          <Menu.Item key="2" icon={<UserOutlined />} onClick={handleViewProfile}>
-            Perfil
-          </Menu.Item>
-          <Menu.Item key="3" icon={<LogoutOutlined />} onClick={handleLogout}>
-            Cerrar Sesión
-          </Menu.Item>
-        </Menu>
+        <Menu theme="dark" mode="inline" items={menuItems} />
       </Sider>
       <Layout className="site-layout">
         <Header className="site-layout-background" style={{ padding: 0 }}>
