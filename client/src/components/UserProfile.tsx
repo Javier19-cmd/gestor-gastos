@@ -29,7 +29,7 @@ const UserProfile: React.FC = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/user/password`, { password }, {
+      await axios.put(`${process.env.REACT_APP_API_ONLINE}/api/user/password`, { password }, {
         headers: {
           'x-auth-token': token
         }
@@ -50,7 +50,7 @@ const UserProfile: React.FC = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/user/profile-picture`, formData, {
+      await axios.post(`${process.env.REACT_APP_API_ONLINE}/api/user/profile-picture`, formData, {
         headers: {
           'x-auth-token': token,
           'Content-Type': 'multipart/form-data'
@@ -67,7 +67,7 @@ const UserProfile: React.FC = () => {
   const handleDeleteAccount = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/user`, {
+      await axios.delete(`${process.env.REACT_APP_API_ONLINE}/api/user`, {
         headers: {
           'x-auth-token': token
         }

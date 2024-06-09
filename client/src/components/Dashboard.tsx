@@ -22,7 +22,7 @@ const Dashboard: React.FC = () => {
     const fetchTransactions = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/transactions`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_ONLINE}/api/transactions`, {
           headers: {
             'x-auth-token': token
           }
@@ -41,7 +41,7 @@ const Dashboard: React.FC = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/transactions`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_ONLINE}/api/transactions`, {
         description,
         amount: parseFloat(amount),
       }, {
@@ -61,7 +61,7 @@ const Dashboard: React.FC = () => {
   const deleteTransaction = async (id: string) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/transactions/${id}`, {
+      await axios.delete(`${process.env.REACT_APP_API_ONLINE}/api/transactions/${id}`, {
         headers: {
           'x-auth-token': token
         }

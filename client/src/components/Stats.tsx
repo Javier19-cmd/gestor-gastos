@@ -17,7 +17,7 @@ const Stats: React.FC = () => {
     const fetchSummary = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/stats/summary`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_ONLINE}/api/stats/summary`, {
           headers: {
             'x-auth-token': token
           }
@@ -31,7 +31,7 @@ const Stats: React.FC = () => {
     const fetchMonthlyStats = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/stats/monthly`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_ONLINE}/api/stats/monthly`, {
           headers: {
             'x-auth-token': token
           }

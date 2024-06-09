@@ -16,7 +16,7 @@ const Register: React.FC = () => {
     e.preventDefault();
 
     try {
-      const apiUrl = process.env.REACT_APP_API_BASE_URL;
+      const apiUrl = process.env.REACT_APP_API_ONLINE;
       // console.log("API Base URL:", apiUrl);
       // if (!apiUrl) {
       //   throw new Error("API base URL is not defined");
