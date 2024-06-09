@@ -36,7 +36,6 @@ const Stats: React.FC = () => {
             'x-auth-token': token
           }
         });
-        console.log('Monthly Stats:', response.data); // Verificar el formato de las claves
         setMonthlyStats(response.data);
       } catch (error) {
         console.error('Error fetching monthly stats:', error);

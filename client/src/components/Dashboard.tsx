@@ -96,7 +96,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={toggleCollapsed}>
+      <Sider collapsible collapsed={collapsed} onCollapse={toggleCollapsed} breakpoint="md">
         <div className="logo" />
         <Menu theme="dark" mode="inline">
           <Menu.Item key="1" icon={<PieChartOutlined />} onClick={handleViewStats}>
