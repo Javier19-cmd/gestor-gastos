@@ -1,9 +1,0 @@
-@media (max-width: 768px) {
-  .site-layout .site-layout-background {
-    padding: 0 10px;
-  }
-
-  .ant-layout-sider {
-    width: 80px !important;
-  }
-}

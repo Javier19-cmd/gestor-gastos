@@ -4,14 +4,13 @@ import { Modal, Button as BootstrapButton } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Layout, Menu, Button as AntButton, Select } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined, PieChartOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
-import { Container, Header, Title, Form, Input, Button, Table, TableRow, TableHeader, TableCell, TableBody } from './Dashboard.styles';
-import './Sidebar.css';
+import { Container, Header, Title, Form, Input, Button, Table, TableRow, TableHeader, TableCell, TableBody, TableContainer } from './Dashboard.styles';
 
 const { Sider, Content } = Layout;
 const { Option } = Select;
 
 const Dashboard: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const [transactions, setTransactions] = useState<{ description: string, amount: number, _id: string, type: string }[]>([]);
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
@@ -43,10 +42,10 @@ const Dashboard: React.FC = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(`${process.env.REACT_APP_API_ONLINE}/api/transactions`, {
+      const endpoint = type === 'income' ? '/api/transactions/income' : '/api/transactions';
+      const response = await axios.post(`${process.env.REACT_APP_API_ONLINE}${endpoint}`, {
         description,
         amount: parseFloat(amount),
-        type, // Incluyendo el tipo de transacción
       }, {
         headers: {
           'x-auth-token': token
@@ -106,19 +105,16 @@ const Dashboard: React.FC = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={toggleCollapsed} breakpoint="md">
+      <Sider collapsible collapsed={collapsed} onCollapse={toggleCollapsed} breakpoint="md" collapsedWidth="0">
         <div className="logo" />
         <Menu theme="dark" mode="inline" items={menuItems} />
       </Sider>
-      <Layout className="site-layout">
-        <Header className="site-layout-background" style={{ padding: 0 }}>
-          <AntButton type="primary" onClick={toggleCollapsed} style={{ marginLeft: 16 }}>
-            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-          </AntButton>
-          <Title>Dashboard de Finanzas</Title>
+      <Layout className="site-layout" style={{ height: '100%' }}>
+        <Header className="site-layout-background dashboard-header" style={{ padding: 0 }}>
+          <Title className="dashboard-title">Dashboard de Finanzas</Title>
         </Header>
-        <Content style={{ margin: '0 16px' }}>
-          <Form onSubmit={addTransaction}>
+        <Content className="dashboard-content" style={{ margin: '0 16px', padding: '24px', backgroundColor: '#fff', height: '100%' }}>
+          <Form className="dashboard-form" onSubmit={addTransaction}>
             <Input 
               type="text" 
               placeholder="Descripción" 
@@ -137,28 +133,30 @@ const Dashboard: React.FC = () => {
             </Select>
             <Button type="submit">Agregar Transacción</Button>
           </Form>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableCell>Descripción</TableCell>
-                <TableCell>Monto</TableCell>
-                <TableCell>Tipo</TableCell>
-                <TableCell>Acciones</TableCell>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {transactions.map((transaction) => (
-                <TableRow key={transaction._id}>
-                  <TableCell>{transaction.description}</TableCell>
-                  <TableCell>{transaction.amount}</TableCell>
-                  <TableCell>{transaction.type === 'income' ? 'Ingreso' : 'Gasto'}</TableCell>
-                  <TableCell>
-                    <AntButton onClick={() => deleteTransaction(transaction._id)} type="primary" danger>Eliminar</AntButton>
-                  </TableCell>
+          <TableContainer>
+            <Table className="dashboard-table">
+              <TableHeader>
+                <TableRow>
+                  <TableCell>Descripción</TableCell>
+                  <TableCell>Monto</TableCell>
+                  <TableCell>Tipo</TableCell>
+                  <TableCell>Acciones</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {transactions.map((transaction) => (
+                  <TableRow key={transaction._id}>
+                    <TableCell>{transaction.description}</TableCell>
+                    <TableCell>{transaction.amount}</TableCell>
+                    <TableCell>{transaction.type === 'income' ? 'Ingreso' : 'Gasto'}</TableCell>
+                    <TableCell>
+                      <AntButton onClick={() => deleteTransaction(transaction._id)} type="primary" danger>Eliminar</AntButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
           <Modal show={showModal} onHide={handleCloseModal}>
             <Modal.Header closeButton>
               <Modal.Title>Notificación</Modal.Title>
