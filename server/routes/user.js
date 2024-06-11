@@ -6,6 +6,17 @@ const Transaction = require('../models/Transaction'); // Asegúrate de importar 
 const auth = require('../middleware/auth');
 const multer = require('multer');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
+
+// Configuración del rate limiter
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // límite de 100 solicitudes por ventana
+  message: 'Too many requests from this IP, please try again after 15 minutes'
+});
+
+// Aplicar el rate limiter a todas las rutas de este router
+router.use(limiter);
 
 // Configuración de multer para subir archivos
 const storage = multer.diskStorage({

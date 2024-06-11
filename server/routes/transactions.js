@@ -2,6 +2,17 @@ const express = require('express');
 const router = express.Router();
 const Transaction = require('../models/Transaction');
 const auth = require('../middleware/auth');
+const rateLimit = require('express-rate-limit');
+
+// Configurar el rate limiter
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // Limite de 100 peticiones por ventana por usuario
+  message: 'Too many requests from this IP, please try again after 15 minutes'
+});
+
+// Aplicar el rate limiter a todas las rutas
+router.use(limiter);
 
 // Obtener todas las transacciones del usuario
 router.get('/', auth, async (req, res) => {
