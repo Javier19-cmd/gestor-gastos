@@ -26,21 +26,29 @@ Gestor de Gastos es una aplicación para administrar y controlar tus gastos pers
     ```bash
     git clone https://github.com/Javier19-cmd/gestor-gastos.git
     ```
-2. Navega al directorio del proyecto:
+2. Navega al directorio del frontend del proyecto:
     ```bash
-    cd gestor-gastos
+    cd gestor-gastos/client
     ```
 3. Instala las dependencias:
     ```bash
     npm install
     ```
-4. Configura las variables de entorno en un archivo `.env`:
+4. Navega al directorio del backend del proyecto:
+    ```bash
+    cd gestor-gastos/server
+    ```
+5. Instala las dependencias:
+    ```bash
+    npm install
+    ```
+6. Configura las variables de entorno en un archivo `.env`:
     ```
     MONGO_URI=tu_mongodb_uri
     PORT=puerto_deseado
     ```
 
-5. Inicia la aplicación:
+7. Inicia la aplicación (el comando se debe correr dentro de cada directorio):
     ```bash
     npm start
     ```
