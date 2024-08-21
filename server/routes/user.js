@@ -2,11 +2,14 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
-const Transaction = require('../models/Transaction'); // Asegúrate de importar el modelo Transaction
+const Transaction = require('../models/Transaction');
 const auth = require('../middleware/auth');
 const multer = require('multer');
 const path = require('path');
 const rateLimit = require('express-rate-limit');
+const crypto = require('crypto-js');
+
+const secretKey = process.env.SECRET_KEY;
 
 // Configuración del rate limiter
 const limiter = rateLimit({
@@ -29,12 +32,31 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+// Función de descifrado
+function decrypt(ciphertext) {
+  try {
+    const bytes = crypto.AES.decrypt(ciphertext, secretKey);
+    const originalText = bytes.toString(crypto.enc.Utf8);
+    return originalText;
+  } catch (error) {
+    console.error("Error during decryption:", error);
+    throw new Error("Decryption failed");
+  }
+}
+
 // Cambiar contraseña
 router.put('/password', auth, async (req, res) => {
   const { password } = req.body;
 
+  let decryptedPassword;
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    decryptedPassword = decrypt(password);
+  } catch (error) {
+    return res.status(500).json({ message: "Error decrypting password" });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(decryptedPassword, 10);
     await User.findByIdAndUpdate(req.user.userId, { password: hashedPassword });
     res.json({ message: 'Password updated successfully' });
   } catch (err) {
