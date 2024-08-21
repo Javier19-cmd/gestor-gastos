@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import CryptoJS from 'crypto-js';
 import { Modal, Button as BootstrapButton } from 'react-bootstrap';
 import { Container, FormContainer, Title, Form, Label, Input, Button } from './Login.styles';
 
@@ -13,23 +14,30 @@ const Login: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     try {
       const apiUrl = process.env.REACT_APP_API_ONLINE;
-      // if (!apiUrl) {
-      //   throw new Error("API base URL is not defined");
-      // }
-
+      const secretKey = process.env.REACT_APP_SECRET_KEY;
+  
+      // Verificar si secretKey está definido
+      if (!secretKey) {
+        throw new Error("La clave secreta no está definida en las variables de entorno");
+      }
+  
+      // Cifrar la contraseña antes de enviarla
+      const encryptedPassword = CryptoJS.AES.encrypt(password, secretKey).toString();
+  
       const response = await axios.post(`${apiUrl}/api/auth/login`, {
         email,
-        password,
+        password: encryptedPassword,
       });
-
+  
       // Guardando el token en el almacenamiento local (localStorage)
       localStorage.setItem('token', response.data.token);
       setModalMessage('Login successful!');
       setIsModalOpen(true);
     } catch (error) {
+      console.error("Error during login:", error);  // Log detallado del error
       if (axios.isAxiosError(error)) {
         setModalMessage(error.response ? error.response.data.message : error.message);
         setIsModalOpen(true);
@@ -39,7 +47,6 @@ const Login: React.FC = () => {
       }
     }
   };
-
   const closeModal = () => {
     setIsModalOpen(false);
     if (modalMessage === 'Login successful!') {
