@@ -5,20 +5,30 @@ const helmet = require('helmet');
 require('dotenv').config();
 const app = express();
 
-// Configuración de CORS más segura
+// Lista de orígenes permitidos
+const allowedOrigins = ['https://gestor-gastos-cliente.vercel.app', 'http://localhost:3000'];
+
 const corsOptions = {
-  //origin: 'http://localhost:3000',
-  origin:'https://gestor-gastos-cliente.vercel.app',
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
-  optionsSuccessStatus: 204
+  optionsSuccessStatus: 204,
 };
+
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));  // Manejar solicitudes OPTIONS
 
 // Eliminando encabezado X-Powered-By
 app.disable('x-powered-by');
 
-// Añadiebdi encabezados de seguridad con helmet
+// Añadiendo encabezados de seguridad con helmet
 app.use(helmet());
 app.use(helmet.hsts({
   maxAge: 63072000,
