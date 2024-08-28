@@ -7,13 +7,16 @@ const app = express();
 
 // Configuración de CORS más segura
 const corsOptions = {
-  //origin: 'http://localhost:3000',
-  origin:'https://gestor-gastos-cliente.vercel.app',
+  origin: 'https://gestor-gastos-cliente.vercel.app',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
-  optionsSuccessStatus: 204
+  optionsSuccessStatus: 204,
 };
+
 app.use(cors(corsOptions));
+
+// Esto maneja las solicitudes OPTIONS que forman parte de las peticiones preflight de CORS
+app.options('*', cors(corsOptions));
 
 // Eliminando encabezado X-Powered-By
 app.disable('x-powered-by');
