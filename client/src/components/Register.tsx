@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import CryptoJS from 'crypto-js';  // Importa la librería crypto-js
 import { Modal, Button as BootstrapButton } from 'react-bootstrap';
 import { Container, FormContainer, Title, Form, Label, Input, Button } from './Register.styles';
 
@@ -17,15 +18,20 @@ const Register: React.FC = () => {
 
     try {
       const apiUrl = process.env.REACT_APP_API_ONLINE;
-      // console.log("API Base URL:", apiUrl);
-      // if (!apiUrl) {
-      //   throw new Error("API base URL is not defined");
-      // }
+      const secretKey = process.env.REACT_APP_SECRET_KEY; // La clave secreta para cifrar
+
+      if (!secretKey) {
+        throw new Error("La clave secreta no está definida en las variables de entorno");
+      }
+
+      // Cifrar la contraseña y la confirmación de la contraseña antes de enviarlas
+      const encryptedPassword = CryptoJS.AES.encrypt(password, secretKey).toString();
+      const encryptedConfirmPassword = CryptoJS.AES.encrypt(confirmPassword, secretKey).toString();
 
       await axios.post(`${apiUrl}/api/auth/register`, {
         email,
-        password,
-        confirmPassword,
+        password: encryptedPassword,
+        confirmPassword: encryptedConfirmPassword,
       });
 
       setModalMessage('User registered successfully!');

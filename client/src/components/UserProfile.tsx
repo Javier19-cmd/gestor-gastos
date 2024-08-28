@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import CryptoJS from 'crypto-js'; // Importar crypto-js
 import { Modal, Button as BootstrapButton } from 'react-bootstrap';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { Container, Header, Title, Form, Input, Button, ProfilePicture, ErrorMessage, BackButton } from './UserProfile.styles';
@@ -29,9 +30,19 @@ const UserProfile: React.FC = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`${process.env.REACT_APP_API_ONLINE}/api/user/password`, { password }, {
+      const secretKey = process.env.REACT_APP_SECRET_KEY; // Asegúrate de tener esta variable en tu archivo .env
+
+      if (!token) {
+        console.error('No token found, unable to change password');
+        return;
+      }
+
+      // Cifrar la contraseña antes de enviarla
+      const encryptedPassword = CryptoJS.AES.encrypt(password, secretKey!).toString();
+
+      await axios.put(`${process.env.REACT_APP_API_ONLINE}/api/user/password`, { password: encryptedPassword }, {
         headers: {
-          'x-auth-token': token
+          'x-auth-token': token // Usar el encabezado x-auth-token con el token
         }
       });
       setErrorMessage('');
@@ -39,7 +50,11 @@ const UserProfile: React.FC = () => {
       setShowModal(true);
     } catch (error) {
       console.error('Error changing password:', error);
-      setErrorMessage('Error changing password');
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        setErrorMessage('Unauthorized: maybe the token is invalid or expired');
+      } else {
+        setErrorMessage('Error changing password');
+      }
     }
   };
 
@@ -50,6 +65,12 @@ const UserProfile: React.FC = () => {
 
     try {
       const token = localStorage.getItem('token');
+      
+      if (!token) {
+        console.error('No token found, unable to upload profile picture');
+        return;
+      }
+
       await axios.post(`${process.env.REACT_APP_API_ONLINE}/api/user/profile-picture`, formData, {
         headers: {
           'x-auth-token': token,
@@ -67,9 +88,15 @@ const UserProfile: React.FC = () => {
   const handleDeleteAccount = async () => {
     try {
       const token = localStorage.getItem('token');
+
+      if (!token) {
+        console.error('No token found, unable to delete account');
+        return;
+      }
+
       await axios.delete(`${process.env.REACT_APP_API_ONLINE}/api/user`, {
         headers: {
-          'x-auth-token': token
+          'x-auth-token': token // Usar el encabezado x-auth-token con el token
         }
       });
       localStorage.removeItem('token');

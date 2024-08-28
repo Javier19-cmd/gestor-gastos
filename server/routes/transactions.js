@@ -4,18 +4,27 @@ const Transaction = require('../models/Transaction');
 const auth = require('../middleware/auth');
 const rateLimit = require('express-rate-limit');
 
-// Configurar el rate limiter
-const limiter = rateLimit({
+// Configuración del rate limiter para las diferentes rutas
+const getLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // Limite de 100 peticiones por ventana por usuario
-  message: 'Too many requests from this IP, please try again after 15 minutes'
+  max: 100, // Limita a 100 peticiones por ventana de tiempo por IP
+  message: 'Too many requests to get transactions, please try again after 15 minutes'
 });
 
-// Aplicar el rate limiter a todas las rutas
-router.use(limiter);
+const postLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 5, // Limita a 50 peticiones por ventana de tiempo por IP
+  message: 'Too many requests to add transactions, please try again after 15 minutes'
+});
 
-// Obtener todas las transacciones del usuario
-router.get('/', auth, async (req, res) => {
+const deleteLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 2, // Limita a 20 peticiones por ventana de tiempo por IP
+  message: 'Too many requests to delete transactions, please try again after 15 minutes'
+});
+
+// Obtener todas las transacciones del usuario con rate limiter
+router.get('/', auth, getLimiter, async (req, res) => {
   try {
     const transactions = await Transaction.find({ userId: req.user.userId });
     res.json(transactions);
@@ -25,8 +34,8 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-// Crear una nueva transacción
-router.post('/', auth, async (req, res) => {
+// Crear una nueva transacción con rate limiter
+router.post('/', auth, postLimiter, async (req, res) => {
   const { description, amount, type } = req.body;
 
   try {
@@ -45,8 +54,8 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// Eliminar una transacción
-router.delete('/:id', auth, async (req, res) => {
+// Eliminar una transacción con rate limiter
+router.delete('/:id', auth, deleteLimiter, async (req, res) => {
   try {
     const transaction = await Transaction.findById(req.params.id);
 
