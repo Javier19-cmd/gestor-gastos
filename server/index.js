@@ -8,7 +8,7 @@ const app = express();
 // Configuración de CORS más segura
 const corsOptions = {
   //origin: 'http://localhost:3000',
-  origin:'https://gestor-gastos-cliente.vercel.app/',
+  origin:'https://gestor-gastos-cliente.vercel.app',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204
