@@ -14,7 +14,7 @@ const corsOptions = {
   optionsSuccessStatus: 204
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 // Eliminando encabezado X-Powered-By
 app.disable('x-powered-by');
