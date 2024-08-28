@@ -23,12 +23,12 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+app.options('*', cors(corsOptions));  // Manejar solicitudes OPTIONS
 
 // Eliminando encabezado X-Powered-By
 app.disable('x-powered-by');
 
-// Añadiebdi encabezados de seguridad con helmet
+// Añadiendo encabezados de seguridad con helmet
 app.use(helmet());
 app.use(helmet.hsts({
   maxAge: 63072000,
