@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import CryptoJS from 'crypto-js';  // Importa la librería crypto-js
+import CryptoJS from 'crypto-js';  
 import { Modal, Button as BootstrapButton } from 'react-bootstrap';
 import { Container, FormContainer, Title, Form, Label, Input, Button } from './Register.styles';
+import { FaArrowLeft } from 'react-icons/fa';
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -16,15 +17,20 @@ const Register: React.FC = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (password !== confirmPassword) {
+      setModalMessage('Passwords do not match!');
+      setIsModalOpen(true);
+      return;
+    }
+
     try {
       const apiUrl = process.env.REACT_APP_API_ONLINE;
-      const secretKey = process.env.REACT_APP_SECRET_KEY; // La clave secreta para cifrar
+      const secretKey = process.env.REACT_APP_SECRET_KEY;
 
       if (!secretKey) {
         throw new Error("La clave secreta no está definida en las variables de entorno");
       }
 
-      // Cifrar la contraseña y la confirmación de la contraseña antes de enviarlas
       const encryptedPassword = CryptoJS.AES.encrypt(password, secretKey).toString();
       const encryptedConfirmPassword = CryptoJS.AES.encrypt(confirmPassword, secretKey).toString();
 
@@ -36,6 +42,11 @@ const Register: React.FC = () => {
 
       setModalMessage('User registered successfully!');
       setIsModalOpen(true);
+
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setModalMessage(error.response ? error.response.data.message : error.message);
@@ -54,9 +65,20 @@ const Register: React.FC = () => {
     }
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   return (
     <Container>
       <FormContainer>
+        <BootstrapButton 
+          variant="link" 
+          onClick={handleBack} 
+          style={{ position: 'absolute', top: '10px', left: '10px', color: '#000' }}
+        >
+          <FaArrowLeft size={24} /> {/* Icono de flecha */}
+        </BootstrapButton>
         <Title>Register</Title>
         <Form onSubmit={handleRegister}>
           <div>
