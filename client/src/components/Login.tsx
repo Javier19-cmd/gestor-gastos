@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
 import { Modal, Button as BootstrapButton } from 'react-bootstrap';
 import { Container, FormContainer, Title, Form, Label, Input, Button } from './Login.styles';
+import { FaArrowLeft } from 'react-icons/fa';  // Importa el icono de flecha
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -19,12 +20,10 @@ const Login: React.FC = () => {
       const apiUrl = process.env.REACT_APP_API_ONLINE;
       const secretKey = process.env.REACT_APP_SECRET_KEY;
   
-      // Verificar si secretKey está definido
       if (!secretKey) {
         throw new Error("La clave secreta no está definida en las variables de entorno");
       }
   
-      // Cifrar la contraseña antes de enviarla
       const encryptedPassword = CryptoJS.AES.encrypt(password, secretKey).toString();
   
       const response = await axios.post(`${apiUrl}/api/auth/login`, {
@@ -32,12 +31,11 @@ const Login: React.FC = () => {
         password: encryptedPassword,
       });
   
-      // Guardando el token en el almacenamiento local (localStorage)
       localStorage.setItem('token', response.data.token);
       setModalMessage('Login successful!');
       setIsModalOpen(true);
     } catch (error) {
-      console.error("Error during login:", error);  // Log detallado del error
+      console.error("Error during login:", error);
       if (axios.isAxiosError(error)) {
         setModalMessage(error.response ? error.response.data.message : error.message);
         setIsModalOpen(true);
@@ -47,16 +45,28 @@ const Login: React.FC = () => {
       }
     }
   };
+
   const closeModal = () => {
     setIsModalOpen(false);
     if (modalMessage === 'Login successful!') {
-      navigate('/dashboard'); // Redirección al dashboard si el login es exitoso
+      navigate('/dashboard');
     }
+  };
+
+  const handleBack = () => {
+    navigate(-1); // Navegar a la página anterior
   };
 
   return (
     <Container>
       <FormContainer>
+        <BootstrapButton 
+          variant="link" 
+          onClick={handleBack} 
+          style={{ position: 'absolute', top: '10px', left: '10px', color: '#000' }}
+        >
+          <FaArrowLeft size={24} /> {/* Icono de flecha */}
+        </BootstrapButton>
         <Title>Login</Title>
         <Form onSubmit={handleLogin}>
           <div>
