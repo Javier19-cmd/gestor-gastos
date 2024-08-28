@@ -5,29 +5,29 @@ const helmet = require('helmet');
 require('dotenv').config();
 const app = express();
 
-// Lista de orígenes permitidos
-const allowedOrigins = ['https://gestor-gastos-cliente.vercel.app', 'http://localhost:3000'];
+// // Lista de orígenes permitidos
+// const allowedOrigins = ['https://gestor-gastos-cliente.vercel.app', 'http://localhost:3000'];
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Permitir solicitudes sin origen (por ejemplo, Postman o scripts de servidor)
-    if (!origin) return callback(null, true);
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     // Permitir solicitudes sin origen (por ejemplo, Postman o scripts de servidor)
+//     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true); // Si el origen está en la lista permitida, permitir la solicitud
-    } else {
-      callback(new Error('Not allowed by CORS')); // Si no está permitido, devolver un error
-    }
-  },
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-  optionsSuccessStatus: 204,
-};
+//     if (allowedOrigins.includes(origin)) {
+//       callback(null, true); // Si el origen está en la lista permitida, permitir la solicitud
+//     } else {
+//       callback(new Error('Not allowed by CORS')); // Si no está permitido, devolver un error
+//     }
+//   },
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//   credentials: true,
+//   optionsSuccessStatus: 204,
+// };
 
-app.use(cors(corsOptions));
+app.use(cors());
 
-// Esto maneja las solicitudes OPTIONS que forman parte de las peticiones preflight de CORS
-app.options('*', cors(corsOptions));
+// // Esto maneja las solicitudes OPTIONS que forman parte de las peticiones preflight de CORS
+// app.options('*', cors(corsOptions));
 
 // Eliminando encabezado X-Powered-By
 app.disable('x-powered-by');
