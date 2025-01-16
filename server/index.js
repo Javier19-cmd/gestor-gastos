@@ -10,17 +10,18 @@ const allowedOrigins = ['https://gestor-gastos-cliente.vercel.app', 'http://loca
 
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.error(`CORS blocked for origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-  optionsSuccessStatus: 204,
+  credentials: true, // Permite cookies y encabezados autorizados
+  optionsSuccessStatus: 204, // Para solicitudes OPTIONS
 };
+
 
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));  // Manejar solicitudes OPTIONS

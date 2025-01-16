@@ -1,2 +1,9 @@
 node_modules
 .env
+.scannerwork
+dependency-check
+dependency-check-report.xml
+dependency-check-report.html
+sonar-scanner-6.2.1.4610-windows-x64
+dependency-check-10.0.2-release.zip
+sonar-scanner-cli-6.2.1.4610-windows-x64.zip
